@@ -1,13 +1,18 @@
+.vscode
+
 # ignore c executable file for server.c
 server
 a.out
 
-
+# ignore base64-encoding test files
 base64-encoding.c
 base64-encoding
 base64-encoding.py
 
-/static/delete_test.txt
+# ignore unnecessary static files
+# (add /static/delete_test.txt file manually to test DELETE method
+/static/delete_test.txt    
+
 /static/put_file.txt
 
 
