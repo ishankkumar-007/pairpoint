@@ -1,0 +1,11 @@
+# ignore c executable file for server.c
+server
+a.out
+
+
+base64-encoding.c
+base64-encoding
+base64-encoding.py
+
+/static/delete_test.txt
+/static/put_file.txt
