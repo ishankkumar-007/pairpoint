@@ -28,9 +28,9 @@ typedef struct Queue
 {
     QueueNode *front;
     QueueNode *rear;
-    pthread_mutex_t mutex;
-    pthread_cond_t cond;
-} Queue;
+    pthread_mutex_t mutex;      // Mutex for thread-safe access     
+    pthread_cond_t cond;        // Condition variable to signal worker threads
+} Queue;                        
 
 Queue *create_queue()
 {
@@ -57,7 +57,7 @@ void enqueue(Queue *q, int client_socket)
         q->front = node;
     }
     q->rear = node;
-    pthread_cond_signal(&q->cond);
+    pthread_cond_signal(&q->cond);      // Signal a waiting worker thread
     pthread_mutex_unlock(&q->mutex);
 }
 
@@ -66,7 +66,7 @@ int dequeue(Queue *q)
     pthread_mutex_lock(&q->mutex);
     while (!q->front)
     {
-        pthread_cond_wait(&q->cond, &q->mutex);
+        pthread_cond_wait(&q->cond, &q->mutex);     // Wait for a task
     }
 
     QueueNode *node = q->front;
