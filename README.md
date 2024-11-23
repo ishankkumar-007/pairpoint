@@ -48,6 +48,7 @@ This project implements a **multi-threaded web server** capable of handling mult
 
 ```plaintext
 project-root/
+|── assets/                           # Output screenshots
 ├── clients/                          # Client simulation scripts
 │   ├── client.py                     # Single client test script
 │   └── multi_client.py               # Multi-client test script
@@ -240,10 +241,10 @@ The `server_log.txt` file logs all incoming requests, including:
 ## Screenshots
 
 1. **Server Running**  
-    ![Server Running Screenshot](images/server_running.png)
+    ![Server Running Screenshot](assets/server_running.png)
 
 2. **Client Requests**  
-   ![Client Output Screenshot](images/client_output.png)
+   ![Client Output Screenshot](assets/client_output.png)
 
 ---
 
