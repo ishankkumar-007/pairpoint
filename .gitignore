@@ -7,7 +7,7 @@ a.out
 # ignore base64-encoding test files
 base64-encoding.c
 base64-encoding
-base64-encoding.py
+# base64-encoding.py
 
 # ignore unnecessary static files
 # (add /static/delete_test.txt file manually to test DELETE method
