@@ -26,7 +26,7 @@ send_request(post_request)
 
 # PUT Request (requires authentication)
 put_message = "Hello, world!!!"
-put_request = f"PUT /put_file.txt HTTP/1.1\r\nHost: localhost\r\n{auth_header}\r\nContent-Length: {len(put_message)}\r\n\r\{put_message}"
+put_request = f"PUT /put_file.txt HTTP/1.1\r\nHost: localhost\r\n{auth_header}\r\nContent-Length: {len(put_message)}\r\n\r\n{put_message}"
 print("\nPUT Request:")
 send_request(put_request)
 
