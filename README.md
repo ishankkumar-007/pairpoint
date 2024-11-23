@@ -28,7 +28,7 @@
 
 ## Overview
 
-This project implements a **multi-threaded web server** capable of handling multiple client connections concurrently. The server supports key HTTP methods (`GET`, `POST`, `PUT`), employs **thread pooling** for efficient connection handling, and includes **basic password protection** for sensitive operations.
+This project implements a **multi-threaded web server** capable of handling multiple client connections concurrently. The server supports key HTTP methods (`GET`, `POST`, `PUT`,`DELETE`), employs **thread pooling** for efficient connection handling, and includes **basic password protection** for sensitive operations.
 
 ---
 
@@ -36,7 +36,7 @@ This project implements a **multi-threaded web server** capable of handling mult
 
 - **Multi-threading with Thread Pooling:** Efficiently handles multiple client requests using a fixed-size thread pool.
 - **Static File Hosting:** Serves static files (HTML, CSS, etc.) from the `static/` directory.
-- **HTTP Method Support:** Supports `GET`, `POST`, and `PUT` requests.
+- **HTTP Method Support:** Supports `GET`, `POST`, `PUT` ,and `DELETE` requests.
 - **Password Protection:** Secures specific endpoints with a basic password mechanism.
 - **Request Logging:** Logs all incoming requests to `server_log.txt`.
 - **Error Handling:** Returns appropriate error codes for invalid requests.
