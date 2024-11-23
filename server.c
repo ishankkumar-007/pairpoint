@@ -12,11 +12,76 @@
 #define BUFFER_SIZE 1024
 #define DEFAULT_PORT 8080
 #define DEFAULT_DOC_ROOT "./static"
-#define MAX_THREADS 10
+#define THREAD_POOL_SIZE 10
 
 int server_port;
 char document_root[BUFFER_SIZE];
-// Mutex lock for logging
+
+// Task Queue Implementation
+typedef struct QueueNode
+{
+    int client_socket;
+    struct QueueNode *next;
+} QueueNode;
+
+typedef struct Queue
+{
+    QueueNode *front;
+    QueueNode *rear;
+    pthread_mutex_t mutex;      // Mutex for thread-safe access     
+    pthread_cond_t cond;        // Condition variable to signal worker threads
+} Queue;                        
+
+Queue *create_queue()
+{
+    Queue *q = (Queue *)malloc(sizeof(Queue));
+    q->front = q->rear = NULL;
+    pthread_mutex_init(&q->mutex, NULL);
+    pthread_cond_init(&q->cond, NULL);
+    return q;
+}
+
+void enqueue(Queue *q, int client_socket)
+{
+    QueueNode *node = (QueueNode *)malloc(sizeof(QueueNode));
+    node->client_socket = client_socket;
+    node->next = NULL;
+
+    pthread_mutex_lock(&q->mutex);
+    if (q->rear)
+    {
+        q->rear->next = node;
+    }
+    else
+    {
+        q->front = node;
+    }
+    q->rear = node;
+    pthread_cond_signal(&q->cond);      // Signal a waiting worker thread
+    pthread_mutex_unlock(&q->mutex);
+}
+
+int dequeue(Queue *q)
+{
+    pthread_mutex_lock(&q->mutex);
+    while (!q->front)
+    {
+        pthread_cond_wait(&q->cond, &q->mutex);     // Wait for a task
+    }
+
+    QueueNode *node = q->front;
+    int client_socket = node->client_socket;
+    q->front = node->next;
+    if (!q->front)
+    {
+        q->rear = NULL;
+    }
+    free(node);
+    pthread_mutex_unlock(&q->mutex);
+    return client_socket;
+}
+
+// Logging
 pthread_mutex_t log_mutex;
 FILE *log_file;
 
@@ -28,6 +93,7 @@ void log_request(const char *client_ip, const char *request)
     pthread_mutex_unlock(&log_mutex);
 }
 
+// HTTP Response
 void send_response(int client_socket, const char *status, const char *content_type, const char *body)
 {
     char response[BUFFER_SIZE];
@@ -41,16 +107,14 @@ void send_response(int client_socket, const char *status, const char *content_ty
     send(client_socket, response, strlen(response), 0);
 }
 
+// Authentication
 int authenticate(const char *header)
 {
     const char *correct_auth = "Basic aXNoYW5rOmlzaGFuaw=="; // "ishank:ishank" in Base64
-    if (strstr(header, correct_auth))
-    {
-        return 1;
-    }
-    return 0;
+    return strstr(header, correct_auth) != NULL;
 }
 
+// Client Handling
 void handle_client(int client_socket, struct sockaddr_in client_addr)
 {
     char buffer[BUFFER_SIZE];
@@ -129,20 +193,26 @@ void handle_client(int client_socket, struct sockaddr_in client_addr)
     close(client_socket);
 }
 
-void *thread_function(void *arg)
+// Thread Pool Worker
+void *thread_pool_worker(void *arg)
 {
-    int client_socket = *(int *)arg;
-    free(arg);
-    pthread_detach(pthread_self());
+    Queue *queue = (Queue *)arg;
 
-    struct sockaddr_in client_addr;
-    socklen_t addr_size = sizeof(client_addr);
-    getpeername(client_socket, (struct sockaddr *)&client_addr, &addr_size);
+    while (1)
+    {
+        int client_socket = dequeue(queue);
 
-    handle_client(client_socket, client_addr);
+        struct sockaddr_in client_addr;
+        socklen_t addr_size = sizeof(client_addr);
+        getpeername(client_socket, (struct sockaddr *)&client_addr, &addr_size);
+
+        handle_client(client_socket, client_addr);
+    }
+
     return NULL;
 }
 
+// Signal Handling
 void handle_signal(int signal)
 {
     printf("\n\nShutting down server...\n");
@@ -151,6 +221,7 @@ void handle_signal(int signal)
     exit(0);
 }
 
+// Configuration
 void read_config()
 {
     FILE *config_file = fopen("server.conf", "r");
@@ -165,70 +236,62 @@ void read_config()
     char line[BUFFER_SIZE];
     while (fgets(line, sizeof(line), config_file))
     {
-        if (sscanf(line, "port=%d", &server_port) == 1)
-            continue;
-        if (sscanf(line, "document_root=%s", document_root) == 1)
-            continue;
+        sscanf(line, "port=%d", &server_port);
+        sscanf(line, "document_root=%s", document_root);
     }
     fclose(config_file);
 }
 
+// Main Function
 int main()
 {
     signal(SIGINT, handle_signal);
-
     read_config();
 
-    // SETTING UP THE SERVER
-    // -------------------------------------------------------------------
-    int server_socket;
-    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_socket == -1)
     {
         perror("Socket creation failed");
-        // exit(1);
-        raise(SIGINT);
+        exit(EXIT_FAILURE);
     }
 
-    struct sockaddr_in server_addr;
-    // Set up the server address structure
+    struct sockaddr_in server_addr = {0};
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(server_port);
 
-    // Bind the socket to the address
     if (bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
     {
         perror("Bind failed");
         close(server_socket);
-        // exit(1);
-        raise(SIGINT);
+        exit(EXIT_FAILURE);
     }
 
-    // Listen for incoming connections
-    if (listen(server_socket, MAX_THREADS) == -1)
+    if (listen(server_socket, THREAD_POOL_SIZE) == -1)
     {
         perror("Listen failed");
         close(server_socket);
-        // exit(1);
-        raise(SIGINT);
+        exit(EXIT_FAILURE);
     }
 
     printf("Server listening on port %d...\n", server_port);
-    // -------------------------------------------------------------------
 
     pthread_mutex_init(&log_mutex, NULL);
     log_file = fopen("server_log.txt", "a");
 
+    Queue *queue = create_queue();
+    pthread_t thread_pool[THREAD_POOL_SIZE];
+    for (int i = 0; i < THREAD_POOL_SIZE; i++)
+    {
+        pthread_create(&thread_pool[i], NULL, thread_pool_worker, queue);
+    }
+
     while (1)
     {
-        int *client_socket = malloc(sizeof(int));
-        *client_socket = accept(server_socket, NULL, NULL);
-
-        if (*client_socket != -1)
+        int client_socket = accept(server_socket, NULL, NULL);
+        if (client_socket != -1)
         {
-            printf("Client connected.\n");
-            pthread_t thread;
-            pthread_create(&thread, NULL, thread_function, client_socket);
+            enqueue(queue, client_socket);
         }
     }
 
