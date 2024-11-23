@@ -139,8 +139,8 @@ project-root/
   3. If the file exists:  
       - Deletes the file.  
       - Sends a `200 OK` response to confirm the deletion.  
-  4. If the file does not exist, the server responds with `404 Not Found`.  
-  5. If the client does not have appropriate permissions (e.g., missing password), the server sends a `401 Unauthorized` response.  
+  4. If the file does not exist, the server responds with `File Not Found`.  
+  5. If the client does not have appropriate permissions (e.g., missing password), the server sends a `401 Unauthorized Authentication required` response.  
 
 
 - **Server Response Codes:**  
@@ -152,7 +152,6 @@ project-root/
 ### Error Handling
 
 - **Unsupported Methods:** Sends `405 Method Not Allowed`.  
-- **Invalid Requests:** Returns `400 Bad Request`.  
 - **File Not Found (GET):** Returns `404 Not Found`.
 
 ---
