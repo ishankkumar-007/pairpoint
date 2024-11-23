@@ -164,8 +164,7 @@ project-root/
   1. The client includes a password in the HTTP header for sensitive requests.  
   2. The server verifies the password against a stored hash.  
   3. If the password is correct, the request proceeds; otherwise, the server returns a `401 Unauthorized` response.  
-- **Hashing Algorithm:** Secure hashing (e.g., SHA-256) ensures the password is not stored in plaintext.  
-- **Configuration:** The password hash is hardcoded in the server for simplicity but can be loaded from a configuration file for production use.
+- **Configuration:** The password is hardcoded in the server for simplicity.
 
 ---
 
