@@ -13,6 +13,7 @@
   - [GET Method](#get-method)
   - [POST Method](#post-method)
   - [PUT Method](#put-method)
+  - [DELETE Method](#delete-method)
   - [Error Handling](#error-handling)
 - [Concurrency](#concurrency)
   - [Thread Pooling](#thread-pooling)
@@ -84,9 +85,8 @@ project-root/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/web-server.git
-   cd web-server
-   ```
+   git clone git@github.com:ishankkumar-007/web-server-in-C.git
+    ```
 
 2. Compile the server:
    ```bash
@@ -130,10 +130,28 @@ project-root/
   2. Writes the content to a file in the `static/` directory.  
   3. Sends `201 Created` (new file) or `200 OK` (updated file) based on the operation.
 
+### DELETE Method
+
+- **Purpose:** Remove files from the server's `static/` directory.  
+- **How It Works:**  
+  1. The client sends an HTTP request specifying the file to delete.  
+  2. The server locates the file in the `static/` directory.  
+  3. If the file exists:  
+      - Deletes the file.  
+      - Sends a `200 OK` response to confirm the deletion.  
+  4. If the file does not exist, the server responds with `File Not Found`.  
+  5. If the client does not have appropriate permissions (e.g., missing password), the server sends a `401 Unauthorized Authentication required` response.  
+
+
+- **Server Response Codes:**  
+  - `200 OK`: File successfully deleted.  
+  - `404 Not Found`: File does not exist.  
+  - `401 Unauthorized`: Password required or incorrect.  
+  - `405 Method Not Allowed`: DELETE method is disabled or unsupported for the requested resource.
+
 ### Error Handling
 
 - **Unsupported Methods:** Sends `405 Method Not Allowed`.  
-- **Invalid Requests:** Returns `400 Bad Request`.  
 - **File Not Found (GET):** Returns `404 Not Found`.
 
 ---
