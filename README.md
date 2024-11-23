@@ -84,9 +84,8 @@ project-root/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/web-server.git
-   cd web-server
-   ```
+   git@github.com:ishankkumar-007/web-server-in-C.git
+    ```
 
 2. Compile the server:
    ```bash
