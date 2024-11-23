@@ -48,17 +48,40 @@ This project implements a **multi-threaded web server** capable of handling mult
 
 ```plaintext
 project-root/
-├── static/             # Directory containing static files
-│   ├── index.html      # Default test HTML file
-│   ├── post_test.html  # HTML for POST method testing
-│   ├── put_file.txt    # Text file for PUT testing
-├── .gitignore          # Git ignore file
-├── client.py           # Python script for single client testing
-├── multi_client.py     # Python script for multiple client simulation
-├── README.md           # Project documentation
-├── server              # Compiled server executable
-├── server_log.txt      # Log file for server activity
-└── server.c            # C source code for the web server
+├── clients/                          # Client simulation scripts
+│   ├── client.py                     # Single client test script
+│   └── multi_client.py               # Multi-client test script
+├── https_server/                     # HTTPS server implementation
+│   ├── bin/                          # Binary directory
+│   │   └── http_server               # Compiled HTTP server executable
+│   ├── include/                      # Header files for the server
+│   │   ├── auth.h                    # Authentication header
+│   │   ├── config.h                  # Configuration handling header
+│   │   ├── http.h                    # HTTP handling header
+│   │   ├── logger.h                  # Logging utility header
+│   │   ├── queue.h                   # Queue handling header
+│   │   └── server.h                  # Server core header
+│   └── src/                          # Source files for server modules
+│       ├── auth.c                    # Authentication module
+│       ├── config.c                  # Configuration handling module
+│       ├── http.c                    # HTTP handling module
+│       ├── logger.c                  # Logging utility module
+│       ├── main.c                    # Main server code
+│       ├── queue.c                   # Queue handling module
+│       └── server.c                  # Server core logic
+├── static/                           # Static files served by the server
+│   ├── index.html                    # Default HTML page
+│   ├── post_test.html                # HTML for testing POST requests
+│   └── put_file.txt                  # File for PUT request testing
+├── Makefile                          # Build configuration file
+├── server_log.txt                    # Server log output
+├── server.conf                       # Server configuration file
+├── test/                             # Testing utilities
+│   ├── base64-encoding.py            # Python script for base64 encoding tests
+│   └── base64-encoding.c             # C program for base64 encoding tests
+├── .gitignore                        # Git ignore rules
+└── README.md                         # Project documentation
+
 ```
 
 ---
