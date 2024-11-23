@@ -101,9 +101,6 @@ project-root/
    ```bash
    ./server
    ```
-
-2. Access the server through a browser or use the provided client scripts.
-
 ---
 
 ## HTTP Methods
