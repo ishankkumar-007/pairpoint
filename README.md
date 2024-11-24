@@ -1,6 +1,6 @@
-# Multi-threaded Web Server Project
+## Multi-threaded Web Server Project
 
-## Table of Contents
+### Table of Contents
 - [Overview](#overview)
 - [Features](#features)
 - [Project Structure](#project-structure)
@@ -20,6 +20,9 @@
 - [Authentication and Security](#authentication-and-security)
   - [Password Protection](#password-protection)
 - [Client Testing](#client-testing)
+  - [Single Client (C)](#single-client-c)
+  - [Single Client (Python)](#single-client-python)
+  - [Multi-Client Simulation](#multi-client-simulation)
 - [Log File](#log-file)
 - [Screenshots](#screenshots)
 - [Acknowledgements](#acknowledgements)
@@ -28,7 +31,7 @@
 
 ## Overview
 
-This project implements a **multi-threaded web server** capable of handling multiple client connections concurrently. The server supports key HTTP methods (`GET`, `POST`, `PUT`,`DELETE`), employs **thread pooling** for efficient connection handling, and includes **basic password protection** for sensitive operations.
+This project implements a **multi-threaded web server** capable of handling multiple client connections concurrently. The server supports key HTTP methods (`GET`, `POST`, `PUT`, `DELETE`), employs **thread pooling** for efficient connection handling, and includes **basic password protection** for sensitive operations.
 
 ---
 
@@ -36,7 +39,7 @@ This project implements a **multi-threaded web server** capable of handling mult
 
 - **Multi-threading with Thread Pooling:** Efficiently handles multiple client requests using a fixed-size thread pool.
 - **Static File Hosting:** Serves static files (HTML, CSS, etc.) from the `static/` directory.
-- **HTTP Method Support:** Supports `GET`, `POST`, `PUT` ,and `DELETE` requests.
+- **HTTP Method Support:** Supports `GET`, `POST`, `PUT`, `DELETE` requests.
 - **Password Protection:** Secures specific endpoints with a basic password mechanism.
 - **Request Logging:** Logs all incoming requests to `server_log.txt`.
 - **Error Handling:** Returns appropriate error codes for invalid requests.
@@ -49,8 +52,8 @@ This project implements a **multi-threaded web server** capable of handling mult
 ```plaintext
 project-root/
 ├── clients/                          # Client simulation scripts
-│   ├── client                        # Compiled single client executable
-│   ├── client.c                      # C source for single client
+│   ├── client                        # Compiled single client executable (C)
+│   ├── client.c                      # C source for single client (C)
 │   ├── client.py                     # Python script for single client testing
 │   ├── Makefile                      # Build configuration for clients
 │   ├── multi_client                  # Compiled multi-client executable
@@ -84,7 +87,6 @@ project-root/
 ├── README.md                         # Project documentation
 └── test/                             # Testing utilities
     └── base64-encoding.py            # Python script for base64 encoding tests
-
 ```
 
 ---
@@ -93,7 +95,7 @@ project-root/
 
 - **Programming Language:** C (Server)
 - **Thread Management:** POSIX Threads (pthreads)
-- **Client-Side Testing:** Python 3 (`socket` library)
+- **Client-Side Testing:** Python 3 (`socket` library) and C (for single-client and multi-client testing)
 - **HTTP Protocol Handling**
 - **Password Management:** Secure password verification using hashing.
 
@@ -112,14 +114,19 @@ project-root/
 1. Clone the repository:
    ```bash
    git clone git@github.com:ishankkumar-007/web-server-in-C.git
-    ```
+   ```
 
 2. Compile the server:
    ```bash
    gcc server.c -o server
    ```
 
-3. Place your test files in the `static/` directory.
+3. Compile the client:
+   ```bash
+   gcc client.c -o client   # For the C client
+   ```
+
+4. Place your test files in the `static/` directory.
 
 ### Running the Server
 
@@ -127,6 +134,7 @@ project-root/
    ```bash
    ./server
    ```
+
 ---
 
 ## HTTP Methods
@@ -214,31 +222,48 @@ project-root/
 
 ## Client Testing
 
-### Single Client
+### Single Client (C)
 
-- Use the `client.py` script to test the server with basic requests:
-  ```bash
-  python3 client.py
-  ```
+To test the server with a single client using C, compile the client code:
+
+```bash
+gcc client.c -o client
+```
+
+Then run the client with:
+
+```bash
+./client 
+```
+
+### Single Client (Python)
+
+The Python client can be used for testing by running the `client.py` script. It communicates with the server using the same protocol:
+
+```bash
+python3 client.py 
+```
 
 ### Multi-Client Simulation
 
-- Use the `multi_client.py` script to simulate multiple concurrent client connections:
-  ```bash
-  python3 multi_client.py
-  ```
+To simulate multiple clients, you can compile and run the `multi_client.c` or `multi_client.py` scripts, which simulate several clients concurrently connecting to the server.
+### Multiple Client (C)
+```bash
+gcc multi_client.c -o multi_client
+```
+### Multiple Client (Python)
+```bash
+multi_python3 client.py 
+```
 
 ---
 
 ## Log File
 
-The `server_log.txt` file logs all incoming requests, including:
-- **Timestamp:** When the request was received.  
-- **Client IP Address:** Identifies the client.  
-- **Request Type:** Indicates the HTTP method (e.g., GET, POST).  
-- **Response Code:** Shows the server's response code (e.g., `200 OK`, `404 Not Found`).  
+The server logs all incoming requests and actions to `server_log.txt`. You can check this file for debugging purposes and to track server activity.
 
 ---
+
 
 ## Screenshots
 
