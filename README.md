@@ -48,10 +48,14 @@ This project implements a **multi-threaded web server** capable of handling mult
 
 ```plaintext
 project-root/
-|── assets/                           # Output screenshots
 ├── clients/                          # Client simulation scripts
-│   ├── client.py                     # Single client test script
-│   └── multi_client.py               # Multi-client test script
+│   ├── client                        # Compiled single client executable
+│   ├── client.c                      # C source for single client
+│   ├── client.py                     # Python script for single client testing
+│   ├── Makefile                      # Build configuration for clients
+│   ├── multi_client                  # Compiled multi-client executable
+│   ├── multi_client.c                # C source for multi-client handling
+│   └── multi_client.py               # Python script for multiple client simulation
 ├── https_server/                     # HTTPS server implementation
 │   ├── bin/                          # Binary directory
 │   │   └── http_server               # Compiled HTTP server executable
@@ -62,26 +66,24 @@ project-root/
 │   │   ├── logger.h                  # Logging utility header
 │   │   ├── queue.h                   # Queue handling header
 │   │   └── server.h                  # Server core header
-│   └── src/                          # Source files for server modules
-│       ├── auth.c                    # Authentication module
-│       ├── config.c                  # Configuration handling module
-│       ├── http.c                    # HTTP handling module
-│       ├── logger.c                  # Logging utility module
-│       ├── main.c                    # Main server code
-│       ├── queue.c                   # Queue handling module
-│       └── server.c                  # Server core logic
-├── static/                           # Static files served by the server
-│   ├── index.html                    # Default HTML page
-│   ├── post_test.html                # HTML for testing POST requests
-│   └── put_file.txt                  # File for PUT request testing
-├── Makefile                          # Build configuration file
-├── server_log.txt                    # Server log output
-├── server.conf                       # Server configuration file
-├── test/                             # Testing utilities
-│   ├── base64-encoding.py            # Python script for base64 encoding tests
-│   └── base64-encoding.c             # C program for base64 encoding tests
-├── .gitignore                        # Git ignore rules
-└── README.md                         # Project documentation
+│   ├── Makefile                      # Build configuration for the server
+│   ├── server.conf                   # Server configuration file
+│   ├── server_log.txt                # Server log output
+│   ├── src/                          # Source files for server modules
+│   │   ├── auth.c                    # Authentication module
+│   │   ├── config.c                  # Configuration handling module
+│   │   ├── http.c                    # HTTP handling module
+│   │   ├── logger.c                  # Logging utility module
+│   │   ├── main.c                    # Main server code
+│   │   ├── queue.c                   # Queue handling module
+│   │   └── server.c                  # Server core logic
+│   └── static/                       # Static files served by the server
+│       ├── index.html                # Default HTML page
+│       ├── post_test.html            # HTML for testing POST requests
+│       └── put_file.txt              # File for PUT request testing
+├── README.md                         # Project documentation
+└── test/                             # Testing utilities
+    └── base64-encoding.py            # Python script for base64 encoding tests
 
 ```
 
