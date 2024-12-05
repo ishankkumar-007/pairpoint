@@ -15,6 +15,8 @@ base64-encoding
 
 /static/put_file.txt
 
+/https_server/server_log.txt
+
 # ignore all binaries and obj files
 **bin/
 **obj/
