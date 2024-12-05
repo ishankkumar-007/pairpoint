@@ -50,43 +50,49 @@ This project implements a **multi-threaded web server** capable of handling mult
 ## Project Structure
 
 ```plaintext
-project-root/
-├── clients/                          # Client simulation scripts
-│   ├── client                        # Compiled single client executable (C)
-│   ├── client.c                      # C source for single client (C)
-│   ├── client.py                     # Python script for single client testing
-│   ├── Makefile                      # Build configuration for clients
-│   ├── multi_client                  # Compiled multi-client executable
-│   ├── multi_client.c                # C source for multi-client handling
-│   └── multi_client.py               # Python script for multiple client simulation
-├── https_server/                     # HTTPS server implementation
-│   ├── bin/                          # Binary directory
-│   │   └── http_server               # Compiled HTTP server executable
-│   ├── include/                      # Header files for the server
-│   │   ├── auth.h                    # Authentication header
-│   │   ├── config.h                  # Configuration handling header
-│   │   ├── http.h                    # HTTP handling header
-│   │   ├── logger.h                  # Logging utility header
-│   │   ├── queue.h                   # Queue handling header
-│   │   └── server.h                  # Server core header
-│   ├── Makefile                      # Build configuration for the server
-│   ├── server.conf                   # Server configuration file
-│   ├── server_log.txt                # Server log output
-│   ├── src/                          # Source files for server modules
-│   │   ├── auth.c                    # Authentication module
-│   │   ├── config.c                  # Configuration handling module
-│   │   ├── http.c                    # HTTP handling module
-│   │   ├── logger.c                  # Logging utility module
-│   │   ├── main.c                    # Main server code
-│   │   ├── queue.c                   # Queue handling module
-│   │   └── server.c                  # Server core logic
-│   └── static/                       # Static files served by the server
-│       ├── index.html                # Default HTML page
-│       ├── post_test.html            # HTML for testing POST requests
-│       └── put_file.txt              # File for PUT request testing
-├── README.md                         # Project documentation
-└── test/                             # Testing utilities
-    └── base64-encoding.py            # Python script for base64 encoding tests
+project-root/                        # Project root directory
+├── clients/                         # Client simulation scripts
+│   ├── client.c                     # C source for a single client program
+│   ├── client.py                    # Python script for simulating a single client
+│   ├── Makefile                     # Build configuration file for client programs
+│   ├── multi_client.c               # C source for a multi-client handling program
+│   └── multi_client.py              # Python script for simulating multiple clients
+│
+├── https_server/                    # HTTPS server implementation
+│   ├── include/                     # Directory containing header files for the server
+│   │   ├── auth.h                   # Header file for authentication functions
+│   │   ├── config.h                 # Header file for configuration handling
+│   │   ├── http.h                   # Header file for HTTP request and response handling
+│   │   ├── logger.h                 # Header file for logging utilities
+│   │   ├── queue.h                  # Header file for queue data structure and operations
+│   │   └── server.h                 # Header file for core server definitions and functions
+│   │
+│   ├── Makefile                     # Build configuration file for the HTTPS server
+│   ├── server.conf                  # Server configuration file (e.g., port settings, thread pool size)
+│   ├── server_log.txt               # Log file where server events and errors are recorded
+│   │
+│   ├── src/                         # Directory containing source files for the server
+│   │   ├── auth.c                   # Source file for authentication logic
+│   │   ├── config.c                 # Source file for configuration management logic
+│   │   ├── http.c                   # Source file for handling HTTP requests and responses
+│   │   ├── logger.c                 # Source file for logging functionality
+│   │   ├── main.c                   # Main server code, entry point of the server program
+│   │   ├── queue.c                  # Source file for queue management operations
+│   │   └── server.c                 # Core server logic and functionality
+│   │
+│   └── static/                      # Directory containing static files served by the server
+│       ├── index.html               # Default HTML page served at the root URL
+│       ├── post_test.html           # HTML page for testing POST requests
+│       └── put_file.txt             # Sample file for testing PUT requests
+│
+├── assets/                          # Directory for project assets such as screenshots or diagrams
+│   ├── server_output.png            # Screenshot showing server output or logs
+│   └── client_demo.png              # Screenshot of client interaction or demo in action
+│
+├── README.md                        # Project documentation file with setup and usage instructions
+│
+└── test/                            # Testing utilities and scripts
+    └── base64-encoding.py           # Python script for testing base64 encoding functionality
 ```
 
 ---
@@ -220,41 +226,91 @@ project-root/
 
 ---
 
-## Client Testing
+## How to Run the Server
 
-### Single Client (C)
+### **Configure the Server**
+1. Edit the `server.conf` file to set up server parameters such as port number, thread pool size, etc. Example:
+   ```plaintext
+   port=8080
+   document_root=./static
+   thread_pool_size=10
+   buffer_size=1024
+   log_file=server_log.txt
 
-To test the server with a single client using C, compile the client code:
+### **Build the Server**
+1. Navigate to the `https_server` directory:
+   ```bash
+   cd https_server
+   ```
+2. Compile the server using `Makefile`:
+   ```bash
+   make
+   ```
+   
 
-```bash
-gcc client.c -o client
-```
+### **Run the Server**
+   ```bash
+   make run
+   ```
 
-Then run the client with:
+---
 
-```bash
-./client 
-```
+## Client Testing 
 
-### Single Client (Python)
+### **Single Client Testing (C Program)**
 
-The Python client can be used for testing by running the `client.py` script. It communicates with the server using the same protocol:
+1. **Build the Client:**
+   - Navigate to the `clients` directory:
+     ```bash
+     cd clients
+     ```
+   - Compile the client:
+     ```bash
+     make
+     ```
 
-```bash
-python3 client.py 
-```
+2. **Run the Client:**
+   ```bash
+   make run_client
+   ```
 
-### Multi-Client Simulation
+---
 
-To simulate multiple clients, you can compile and run the `multi_client.c` or `multi_client.py` scripts, which simulate several clients concurrently connecting to the server.
-### Multiple Client (C)
-```bash
-gcc multi_client.c -o multi_client
-```
-### Multiple Client (Python)
-```bash
-multi_python3 client.py 
-```
+### **Multi-Client Testing (C Program)**
+
+1. **Build the Multi-Client Program:**
+   ```bash
+   make
+   ```
+
+2. **Run Multiple Clients Simultaneously:**
+   ```bash
+   make run_multi_client
+   ```
+
+---
+
+### **Python Client Testing**
+
+#### **Single Client (Python)**
+1. Ensure you have Python 3 installed.
+2. Run the `client.py` script:
+   ```bash
+   python3 client.py
+   ```
+
+<!-- #### **Multi-Client (Python)**
+1. Run the `multi_client.py` script to simulate multiple clients:
+   ```bash
+   python3 multi_client.py
+   ``` -->
+
+---
+
+### **Testing Notes**
+- **Logs:** Server logs are saved in `https_server/server_log.txt` for debugging.
+- **Configuration:** Adjust configurations in `server.conf` before testing.
+- **Static Files:** Default static files (like `index.html`) are served from the `https_server/static` directory. Modify or add files as needed.
 
 ---
 
@@ -264,14 +320,15 @@ The server logs all incoming requests and actions to `server_log.txt`. You can c
 
 ---
 
-
 ## Screenshots
 
 1. **Server Running**  
-    ![Server Running Screenshot](assets/server_running.png)
+
+    ![Server Running Screenshot](assets/server_output.png)
 
 2. **Client Requests**  
-   ![Client Output Screenshot](assets/client_output.png)
+
+   ![Client Output Screenshot](assets/client_demo.png)
 
 ---
 
