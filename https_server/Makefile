@@ -7,7 +7,7 @@ BIN_DIR = bin
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-TARGET = $(BIN_DIR)/http_server
+TARGET = $(BIN_DIR)/server
 
 all: directories $(TARGET)
 
