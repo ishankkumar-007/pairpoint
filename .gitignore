@@ -15,7 +15,9 @@ base64-encoding
 
 /static/put_file.txt
 
-
+# ignore all binaries and obj files
+**bin/
+**obj/
 
 
 # ignore for python ----------------------------------------------
